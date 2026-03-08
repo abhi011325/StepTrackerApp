@@ -165,16 +165,29 @@ function initWeightData() {
   return data;
 }
 
+function calcTomorrowTarget(weight, goal) {
+  const now = new Date();
+  const endOfYear = new Date(now.getFullYear(), 11, 31);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const daysRemaining = Math.max(1, Math.round((endOfYear - today) / (1000 * 60 * 60 * 24)));
+  const dailyLoss = (weight - goal) / daysRemaining;
+  return Math.round((weight - dailyLoss) * 100) / 100;
+}
+
 function logWeight(weight) {
   const data = initWeightData();
   const today = new Date().toISOString().slice(0, 10);
+
+  // Calculate and freeze tomorrow's target at log time
+  const tomorrowTarget = calcTomorrowTarget(weight, data.goal);
 
   // Replace or add today's entry
   const idx = data.entries.findIndex(e => e.date === today);
   if (idx >= 0) {
     data.entries[idx].weight = weight;
+    data.entries[idx].tomorrowTarget = tomorrowTarget;
   } else {
-    data.entries.push({ date: today, weight });
+    data.entries.push({ date: today, weight, tomorrowTarget });
   }
 
   // Update min/max
@@ -194,19 +207,18 @@ function computeWeightState() {
   const currentWeight = latest.weight;
   const lastDate = latest.date;
 
-  // Days remaining in year
+  // Use the frozen target from the last log
+  const tomorrowTarget = latest.tomorrowTarget;
+
+  // Days remaining in year (for display only)
   const now = new Date();
   const endOfYear = new Date(now.getFullYear(), 11, 31);
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const daysRemaining = Math.max(1, Math.round((endOfYear - today) / (1000 * 60 * 60 * 24)));
 
-  // Daily target
-  const dailyLoss = (currentWeight - data.goal) / daysRemaining;
-  const tomorrowTarget = currentWeight - dailyLoss;
-
   return {
     currentWeight,
-    tomorrowTarget: Math.round(tomorrowTarget * 100) / 100,
+    tomorrowTarget,
     daysRemaining,
     yearMin: data.yearMin,
     yearMax: data.yearMax,
