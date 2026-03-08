@@ -9,12 +9,12 @@
   <link rel="apple-touch-icon" href="icons/icon-192.svg">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
-  <title>Step Tracker</title>
+  <title>Health Tracker</title>
 </head>
 <body>
   <div class="app">
     <header>
-      <h1>Step Tracker</h1>
+      <h1>Health Tracker</h1>
     </header>
 
     <main>
@@ -51,6 +51,41 @@
         </div>
         <div class="progress-wrap">
           <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+      </section>
+      <section class="weight-card">
+        <div class="section-title">Weight Tracker</div>
+        <div class="weight-input-row">
+          <input type="number" id="weight-input" class="weight-input" placeholder="78.0" step="0.1" min="20" max="300" inputmode="decimal">
+          <span class="weight-unit">kg</span>
+        </div>
+        <button id="btn-log-weight" class="complete-btn">Log Weight</button>
+
+        <div id="weight-stats">
+          <div class="stat-row">
+            <span class="stat-label">Tomorrow's target</span>
+            <span id="tomorrow-target" class="stat-value">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Goal</span>
+            <span id="weight-goal" class="stat-value">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Days remaining</span>
+            <span id="days-remaining" class="stat-value">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Year low</span>
+            <span id="year-min" class="stat-value">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Year high</span>
+            <span id="year-max" class="stat-value">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Last logged</span>
+            <span id="last-logged" class="stat-value">—</span>
+          </div>
         </div>
       </section>
     </main>

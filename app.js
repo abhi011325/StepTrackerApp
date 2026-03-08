@@ -104,6 +104,9 @@ function render() {
 
   // Stepper display
   document.getElementById('stepper-value').textContent = stepperValue;
+
+  // Weight
+  renderWeight();
 }
 
 // --- Stepper ---
@@ -127,6 +130,119 @@ function setupStepper() {
 
   document.getElementById('btn-complete').addEventListener('click', () => {
     completeBlocks(stepperValue);
+    if (navigator.vibrate) navigator.vibrate(100);
+  });
+}
+
+// --- Weight Tracker ---
+const WEIGHT_GOAL = 70;
+
+function getWeightData() {
+  const raw = localStorage.getItem('weightTracker');
+  if (!raw) return null;
+  return JSON.parse(raw);
+}
+
+function saveWeightData(data) {
+  localStorage.setItem('weightTracker', JSON.stringify(data));
+}
+
+function initWeightData() {
+  const existing = getWeightData();
+  const currentYear = new Date().getFullYear();
+
+  // Year reset
+  if (existing && existing.currentYear !== currentYear) {
+    const fresh = { currentYear, goal: WEIGHT_GOAL, entries: [], yearMin: null, yearMax: null };
+    saveWeightData(fresh);
+    return fresh;
+  }
+
+  if (existing) return existing;
+
+  const data = { currentYear, goal: WEIGHT_GOAL, entries: [], yearMin: null, yearMax: null };
+  saveWeightData(data);
+  return data;
+}
+
+function logWeight(weight) {
+  const data = initWeightData();
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Replace or add today's entry
+  const idx = data.entries.findIndex(e => e.date === today);
+  if (idx >= 0) {
+    data.entries[idx].weight = weight;
+  } else {
+    data.entries.push({ date: today, weight });
+  }
+
+  // Update min/max
+  if (data.yearMin === null || weight < data.yearMin) data.yearMin = weight;
+  if (data.yearMax === null || weight > data.yearMax) data.yearMax = weight;
+
+  saveWeightData(data);
+  renderWeight();
+}
+
+function computeWeightState() {
+  const data = initWeightData();
+  if (data.entries.length === 0) return null;
+
+  // Latest entry
+  const latest = data.entries[data.entries.length - 1];
+  const currentWeight = latest.weight;
+  const lastDate = latest.date;
+
+  // Days remaining in year
+  const now = new Date();
+  const endOfYear = new Date(now.getFullYear(), 11, 31);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const daysRemaining = Math.max(1, Math.round((endOfYear - today) / (1000 * 60 * 60 * 24)));
+
+  // Daily target
+  const dailyLoss = (currentWeight - data.goal) / daysRemaining;
+  const tomorrowTarget = currentWeight - dailyLoss;
+
+  return {
+    currentWeight,
+    tomorrowTarget: Math.round(tomorrowTarget * 100) / 100,
+    daysRemaining,
+    yearMin: data.yearMin,
+    yearMax: data.yearMax,
+    goal: data.goal,
+    lastDate,
+  };
+}
+
+function renderWeight() {
+  const state = computeWeightState();
+  const section = document.getElementById('weight-stats');
+
+  if (!state) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = '';
+
+  document.getElementById('tomorrow-target').textContent = state.tomorrowTarget + ' kg';
+  document.getElementById('weight-goal').textContent = state.goal + ' kg by Dec 31';
+  document.getElementById('days-remaining').textContent = state.daysRemaining;
+  document.getElementById('year-min').textContent = state.yearMin + ' kg';
+  document.getElementById('year-max').textContent = state.yearMax + ' kg';
+
+  // Format last logged date
+  const d = new Date(state.lastDate + 'T00:00:00');
+  document.getElementById('last-logged').textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function setupWeight() {
+  document.getElementById('btn-log-weight').addEventListener('click', () => {
+    const input = document.getElementById('weight-input');
+    const val = parseFloat(input.value);
+    if (isNaN(val) || val <= 0) return;
+    logWeight(val);
     if (navigator.vibrate) navigator.vibrate(100);
   });
 }
@@ -167,7 +283,9 @@ function registerSW() {
 // --- Init ---
 function init() {
   initData();
+  initWeightData();
   setupStepper();
+  setupWeight();
   render();
   scheduleHourlyCheck();
   setupNotifications();

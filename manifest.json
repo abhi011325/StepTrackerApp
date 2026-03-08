@@ -1,6 +1,6 @@
 {
-  "name": "Step Tracker",
-  "short_name": "Steps",
+  "name": "Health Tracker",
+  "short_name": "Health",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f5f5f7",
