@@ -1,6 +1,7 @@
 // --- Configuration ---
 const STEPS_PER_BLOCK = 500;  // 1 block = 500 steps
 const BLOCKS_PER_DAY = 24;    // 1 block per hour, 24/7
+const FIREBASE_URL = 'https://health-tracker-e6722-default-rtdb.firebaseio.com';
 
 // --- Storage helpers ---
 function getData() {
@@ -67,6 +68,7 @@ function completeBlocks(count) {
   saveData(data);
   stepperValue = 1;
   render();
+  syncToCloud();
 }
 
 // --- Render ---
@@ -203,6 +205,7 @@ function logWeight(weight) {
 
   saveWeightData(data);
   renderWeight();
+  syncToCloud();
 }
 
 function computeWeightState() {
@@ -311,8 +314,85 @@ function setupTabs() {
   });
 }
 
+// --- Firebase Cloud Sync ---
+function getPassphrase() {
+  return localStorage.getItem('healthPassphrase');
+}
+
+function setPassphrase(phrase) {
+  localStorage.setItem('healthPassphrase', phrase);
+}
+
+async function syncToCloud() {
+  const phrase = getPassphrase();
+  if (!phrase) return;
+
+  const stepData = getData();
+  const weightData = getWeightData();
+
+  try {
+    await fetch(`${FIREBASE_URL}/users/${encodeURIComponent(phrase)}.json`, {
+      method: 'PUT',
+      body: JSON.stringify({ stepTracker: stepData, weightTracker: weightData }),
+    });
+  } catch (e) {
+    // Offline — will sync next time
+  }
+}
+
+async function loadFromCloud() {
+  const phrase = getPassphrase();
+  if (!phrase) return;
+
+  try {
+    const res = await fetch(`${FIREBASE_URL}/users/${encodeURIComponent(phrase)}.json`);
+    const data = await res.json();
+    if (data) {
+      if (data.stepTracker) saveData(data.stepTracker);
+      if (data.weightTracker) {
+        // Firebase strips null values and empty arrays — restore defaults
+        const wd = data.weightTracker;
+        if (!wd.entries) wd.entries = [];
+        if (wd.yearMin === undefined) wd.yearMin = null;
+        if (wd.yearMax === undefined) wd.yearMax = null;
+        saveWeightData(wd);
+      }
+    }
+  } catch (e) {
+    // Offline — use local data
+  }
+}
+
+// --- Passphrase UI ---
+function showPassphraseModal() {
+  document.getElementById('passphrase-modal').style.display = 'flex';
+}
+
+function hidePassphraseModal() {
+  document.getElementById('passphrase-modal').style.display = 'none';
+}
+
+function setupPassphrase() {
+  const btn = document.getElementById('btn-passphrase');
+  const input = document.getElementById('passphrase-input');
+
+  const submit = async () => {
+    const phrase = input.value.trim();
+    if (!phrase) return;
+    setPassphrase(phrase);
+    hidePassphraseModal();
+    await loadFromCloud();
+    startApp();
+  };
+
+  btn.addEventListener('click', submit);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submit();
+  });
+}
+
 // --- Init ---
-function init() {
+function startApp() {
   initData();
   initWeightData();
   setupTabs();
@@ -323,13 +403,35 @@ function init() {
   setupNotifications();
   registerSW();
 
+  // Show sync indicator
+  const indicator = document.getElementById('sync-indicator');
+  indicator.textContent = 'synced as: ' + getPassphrase();
+
+  // Initial sync to push any new local data to cloud
+  syncToCloud();
+
   // Re-render every minute to catch hour boundaries
   setInterval(render, 60000);
 
-  // Re-render when app comes back to foreground
+  // Re-render and sync when app comes back to foreground
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) render();
+    if (!document.hidden) {
+      loadFromCloud().then(() => render());
+    }
   });
+}
+
+function init() {
+  setupPassphrase();
+
+  const phrase = getPassphrase();
+  if (!phrase) {
+    showPassphraseModal();
+    return;
+  }
+
+  // Load from cloud, then start
+  loadFromCloud().then(() => startApp());
 }
 
 document.addEventListener('DOMContentLoaded', init);

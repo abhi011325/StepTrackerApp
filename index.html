@@ -12,6 +12,16 @@
   <title>Health Tracker</title>
 </head>
 <body>
+  <!-- Passphrase modal -->
+  <div id="passphrase-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+      <h2>Welcome</h2>
+      <p>Enter a passphrase to sync your data across devices. Use the same one on all your devices.</p>
+      <input type="text" id="passphrase-input" class="passphrase-input" placeholder="e.g. abhi2026" autocapitalize="off" autocorrect="off">
+      <button id="btn-passphrase" class="complete-btn">Continue</button>
+    </div>
+  </div>
+
   <div class="app">
     <header>
       <h1>Health Tracker</h1>
@@ -98,6 +108,7 @@
         </section>
       </div>
     </main>
+    <footer id="sync-indicator" class="sync-indicator"></footer>
   </div>
 
   <script src="app.js"></script>

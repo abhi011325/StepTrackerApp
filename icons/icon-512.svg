@@ -1,11 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="102.4" fill="#007AFF"/>
-  <text x="50%" y="38%" text-anchor="middle" dominant-baseline="middle"
-        font-family="-apple-system, system-ui, sans-serif" font-size="179.2" font-weight="800" fill="white">
-    500
-  </text>
-  <text x="50%" y="65%" text-anchor="middle" dominant-baseline="middle"
-        font-family="-apple-system, system-ui, sans-serif" font-size="71.68" font-weight="600" fill="rgba(255,255,255,0.9)">
-    STEPS
-  </text>
+  <!-- Heart icon -->
+  <path d="M256 400c-6.7 0-12.8-2.7-17.3-7.2C193.5 349 139 296 139 228c0-41.4 33.4-74.7 74.7-74.7 25.3 0 42.3 12 42.3 12s17-12 42.3-12c41.3 0 74.7 33.3 74.7 74.7 0 68-54.5 121-99.7 164.8-4.5 4.5-10.6 7.2-17.3 7.2z" fill="white"/>
+  <!-- Pulse line -->
+  <path d="M160 256h48l21.3-53.3 26.7 106.7 26.7-106.7L304 256h48" stroke="white" stroke-width="10.7" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
 </svg>
