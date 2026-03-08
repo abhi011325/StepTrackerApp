@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Steps">
+  <link rel="apple-touch-icon" href="icons/icon-192.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <title>Step Tracker</title>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Step Tracker</h1>
+    </header>
+
+    <main>
+      <section class="status-card">
+        <div id="pending-count" class="pending-count green">0</div>
+        <div class="pending-label">blocks pending</div>
+        <div class="steps-remaining">
+          <span id="steps-remaining">0</span> steps to go
+        </div>
+      </section>
+
+      <section class="complete-card">
+        <div class="complete-label">Blocks completed</div>
+        <div class="stepper">
+          <button id="btn-minus" class="stepper-btn" aria-label="Decrease">−</button>
+          <span id="stepper-value" class="stepper-value">1</span>
+          <button id="btn-plus" class="stepper-btn" aria-label="Increase">+</button>
+        </div>
+        <button id="btn-complete" class="complete-btn">Mark Complete</button>
+      </section>
+
+      <section class="stats-card">
+        <div class="stat-row">
+          <span class="stat-label">Today accrued</span>
+          <span id="today-accrued" class="stat-value">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Lifetime completed</span>
+          <span id="lifetime-completed" class="stat-value">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Lifetime accrued</span>
+          <span id="lifetime-accrued" class="stat-value">0</span>
+        </div>
+        <div class="progress-wrap">
+          <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
