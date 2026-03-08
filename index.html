@@ -17,77 +17,86 @@
       <h1>Health Tracker</h1>
     </header>
 
+    <nav class="tabs">
+      <button class="tab active" data-tab="steps">Steps</button>
+      <button class="tab" data-tab="weight">Weight</button>
+    </nav>
+
     <main>
-      <section class="status-card">
-        <div id="pending-count" class="pending-count green">0</div>
-        <div class="pending-label">blocks pending</div>
-        <div class="steps-remaining">
-          <span id="steps-remaining">0</span> steps to go
-        </div>
-      </section>
+      <div id="tab-steps" class="tab-content active">
+        <section class="status-card">
+          <div id="pending-count" class="pending-count green">0</div>
+          <div class="pending-label">blocks pending</div>
+          <div class="steps-remaining">
+            <span id="steps-remaining">0</span> steps to go
+          </div>
+        </section>
 
-      <section class="complete-card">
-        <div class="complete-label">Blocks completed</div>
-        <div class="stepper">
-          <button id="btn-minus" class="stepper-btn" aria-label="Decrease">−</button>
-          <span id="stepper-value" class="stepper-value">1</span>
-          <button id="btn-plus" class="stepper-btn" aria-label="Increase">+</button>
-        </div>
-        <button id="btn-complete" class="complete-btn">Mark Complete</button>
-      </section>
+        <section class="complete-card">
+          <div class="complete-label">Blocks completed</div>
+          <div class="stepper">
+            <button id="btn-minus" class="stepper-btn" aria-label="Decrease">−</button>
+            <span id="stepper-value" class="stepper-value">1</span>
+            <button id="btn-plus" class="stepper-btn" aria-label="Increase">+</button>
+          </div>
+          <button id="btn-complete" class="complete-btn">Mark Complete</button>
+        </section>
 
-      <section class="stats-card">
-        <div class="stat-row">
-          <span class="stat-label">Today accrued</span>
-          <span id="today-accrued" class="stat-value">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Lifetime completed</span>
-          <span id="lifetime-completed" class="stat-value">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Lifetime accrued</span>
-          <span id="lifetime-accrued" class="stat-value">0</span>
-        </div>
-        <div class="progress-wrap">
-          <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
-        </div>
-      </section>
-      <section class="weight-card">
-        <div class="section-title">Weight Tracker</div>
-        <div class="weight-input-row">
-          <input type="number" id="weight-input" class="weight-input" placeholder="78.0" step="0.1" min="20" max="300" inputmode="decimal">
-          <span class="weight-unit">kg</span>
-        </div>
-        <button id="btn-log-weight" class="complete-btn">Log Weight</button>
+        <section class="stats-card">
+          <div class="stat-row">
+            <span class="stat-label">Today accrued</span>
+            <span id="today-accrued" class="stat-value">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Lifetime completed</span>
+            <span id="lifetime-completed" class="stat-value">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Lifetime accrued</span>
+            <span id="lifetime-accrued" class="stat-value">0</span>
+          </div>
+          <div class="progress-wrap">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+          </div>
+        </section>
+      </div>
 
-        <div id="weight-stats">
-          <div class="stat-row">
-            <span class="stat-label">Tomorrow's target</span>
-            <span id="tomorrow-target" class="stat-value">—</span>
+      <div id="tab-weight" class="tab-content">
+        <section class="weight-card">
+          <div class="weight-input-row">
+            <input type="number" id="weight-input" class="weight-input" placeholder="78.0" step="0.1" min="20" max="300" inputmode="decimal">
+            <span class="weight-unit">kg</span>
           </div>
-          <div class="stat-row">
-            <span class="stat-label">Goal</span>
-            <span id="weight-goal" class="stat-value">—</span>
+          <button id="btn-log-weight" class="complete-btn">Log Weight</button>
+
+          <div id="weight-stats">
+            <div class="stat-row">
+              <span class="stat-label">Tomorrow's target</span>
+              <span id="tomorrow-target" class="stat-value">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Goal</span>
+              <span id="weight-goal" class="stat-value">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Days remaining</span>
+              <span id="days-remaining" class="stat-value">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Year low</span>
+              <span id="year-min" class="stat-value">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Year high</span>
+              <span id="year-max" class="stat-value">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Last logged</span>
+              <span id="last-logged" class="stat-value">—</span>
+            </div>
           </div>
-          <div class="stat-row">
-            <span class="stat-label">Days remaining</span>
-            <span id="days-remaining" class="stat-value">—</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Year low</span>
-            <span id="year-min" class="stat-value">—</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Year high</span>
-            <span id="year-max" class="stat-value">—</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Last logged</span>
-            <span id="last-logged" class="stat-value">—</span>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   </div>
 

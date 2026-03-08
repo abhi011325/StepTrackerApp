@@ -53,6 +53,43 @@ header h1 {
   padding: 8px 0;
 }
 
+/* Tabs */
+.tabs {
+  display: flex;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.tab-content {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tab-content.active {
+  display: flex;
+}
+
 .status-card,
 .complete-card,
 .stats-card,
@@ -203,13 +240,6 @@ header h1 {
 /* Weight tracker */
 .weight-card {
   text-align: left;
-}
-
-.section-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 16px;
-  text-align: center;
 }
 
 .weight-input-row {
