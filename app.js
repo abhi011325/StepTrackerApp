@@ -174,9 +174,16 @@ function calcTomorrowTarget(weight, goal) {
   return Math.round((weight - dailyLoss) * 100) / 100;
 }
 
+function localDateString() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
+
 function logWeight(weight) {
   const data = initWeightData();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateString();
 
   // Calculate and freeze tomorrow's target at log time
   const tomorrowTarget = calcTomorrowTarget(weight, data.goal);
